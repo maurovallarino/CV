@@ -3,17 +3,22 @@ version: 2.1
 # Define the jobs we want to run for this project
 jobs:
   build:
+    machine: true
+    steps:
+      - add_ssh_keys:
+        fingerprints:
+          - "df:89:3c:14:f8:3e:c2:2c:81:ea:98:b4:a0:8f:93:11"
     docker:
-      - image: node:18-alpine3.15
+      - image: cimg/node:18-alpine3.15
         auth:
           username: $DOCKERHUB_USER
-          password: $DOCKERHUB_PASSWORD  
+          password: $DOCKERHUB_PASS
     steps:
       - checkout
       - run: echo "test 1"
   test:
     docker:
-      - image: node:18-alpine3.15
+      - image: cimg/node:18-alpine3.15
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -27,5 +32,5 @@ workflows:
     jobs:
       - build
       - test:
-        requires: 
+        requires:
           - build
